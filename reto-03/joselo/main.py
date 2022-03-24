@@ -33,8 +33,8 @@ import toml
 import easyansi.cursor as cursor
 
 from pathlib import Path
-# from xdg.BaseDirectory import xdg_config_home
-from xdg import XDG_CONFIG_HOME
+# from xdg.BaseDirectory import xdg_config_home  (pyxdg v0.27 y paquete debian python3-xdg)
+from xdg import XDG_CONFIG_HOME  # (xdg v5.1.1 y paquete debian python3-xdg)
 from easyansi import screen
 from easyansi.drawing import box
 from easyansi.attributes import (
@@ -52,11 +52,11 @@ mimetypes.init()
 
 
 # XDG_USER_DIRS = osp.join(xdg_config_home, 'user-dirs.dirs')
-XDG_USER_DIRS = osp.join(XDG_CONFIG_HOME, "user-dirs.dirs")
 # DGNS_CONF_DIR = osp.join(xdg_config_home, 'diogenes')
-DGNS_CONF_DIR = osp.join(XDG_CONFIG_HOME, "diogenes")
 # DGNS_CONF_FILE = osp.join(DGNS_CONF_DIR, 'diogenes.conf')
-DGNS_CONF_FILE = osp.join(DGNS_CONF_DIR, "diogenes.conf")
+XDG_USER_DIRS = XDG_CONFIG_HOME / "user-dirs.dirs"
+DGNS_CONF_DIR = XDG_CONFIG_HOME / "diogenes"
+DGNS_CONF_FILE = XDG_CONFIG_HOME / "diogenes" / "diogenes.conf"
 
 DESCRIPCION = """\
  Diogenes es una aplicación pensada para la limpieza y organización semi
