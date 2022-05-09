@@ -31,34 +31,34 @@ from wand.image import Image
 class ResizeImage:
     """ResizeImage."""
 
-    def __init__(self, filein: Path, fileout: Path, args: dict[str, int]) -> None:  # noqa
-        self.__filein = Path(filein)
-        self.__fileout = Path(fileout)
+    def __init__(self, filein: Path, fileout: Path,
+                 args: dict[str, int]) -> None:
+        self.filein = Path(filein)
+        self.fileout = Path(fileout)
         try:
-            self.__width = args["width"]
-            self.__height = args["height"]
+            self.width = args["width"]
+            self.height = args["height"]
         except KeyError:
             print("No es posible determinar el tamaño de la imágen.")
             raise
 
     def check(self) -> bool:
         """check."""
+        if not self.filein.is_file():
+            raise FileNotFoundError(f"No encuentro el fichero {self.filein}")
 
-        if not self.__filein.is_file():
-            raise FileNotFoundError(f"No encuentro el fichero {self.__filein}")
+        if os.path.getsize(self.filein) == 0:
+            raise ValueError(f"El fichero {self.filein} está vacio.")
 
-        if os.path.getsize(self.__filein) == 0:
-            raise ValueError(f"El fichero {self.__filein} está vacio.")
-
-        im = Image(filename=self.__filein)
+        im = Image(filename=self.filein)
         if not im.mimetype.startswith("image"):
             raise ValueError(
-                f"El fichero {self.__filein} no parece una imágen.")
+                f"El fichero {self.filein} no parece una imágen.")
 
-        if self.__fileout.is_file():
-            raise FileExistsError(f"El fichero {self.__fileout} ya existe.")
+        if self.fileout.is_file():
+            raise FileExistsError(f"El fichero {self.fileout} ya existe.")
 
-        if self.__fileout.is_dir():
+        if self.fileout.is_dir():
             raise ValueError(
                 "El argumento 'fileout' debe ser un fichero no un directorio.")
 
@@ -66,13 +66,13 @@ class ResizeImage:
 
     def execute(self) -> None:
         """execute."""
-        im = Image(filename=self.__filein)
-        im.resize(self.__width, self.__height)
-        im.save(filename=self.__fileout)
+        im = Image(filename=self.filein)
+        im.resize(self.width, self.height)
+        im.save(filename=self.fileout)
 
     @property
-    def size(self):
-        return self.__width, self.__height
+    def size(self):  # noqa
+        return self.width, self.height
 
 
 def main():  # noqa
