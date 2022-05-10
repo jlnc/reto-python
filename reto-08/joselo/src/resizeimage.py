@@ -50,10 +50,11 @@ class ResizeImage:
         if os.path.getsize(self.filein) == 0:
             raise ValueError(f"El fichero {self.filein} está vacio.")
 
-        im = Image(filename=self.filein)
-        if not im.mimetype.startswith("image"):
-            raise ValueError(
-                f"El fichero {self.filein} no parece una imágen.")
+        try:
+            _ = Image(filename=self.filein)
+        except Exception as e:
+            raise RuntimeError(
+                f"O {self.filein} no es una imágen o está corrupta.") from e
 
         if self.fileout.is_file():
             raise FileExistsError(f"El fichero {self.fileout} ya existe.")
@@ -61,6 +62,10 @@ class ResizeImage:
         if self.fileout.is_dir():
             raise ValueError(
                 "El argumento 'fileout' debe ser un fichero no un directorio.")
+
+        if not all(x > 0 for x in self.args.values()):
+            raise ValueError(
+                "'width' y 'height' tienen que ser enteros positivos.")
 
         return True
 

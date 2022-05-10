@@ -48,12 +48,13 @@ class ResizeImage:
             raise FileNotFoundError(f"No encuentro el fichero {self.__filein}")
 
         if os.path.getsize(self.__filein) == 0:
-            raise ValueError(f"El fichero {self.__filein} está vacio.")
+            raise ValueError(f"El fichero {self.filein} está vacio.")
 
-        im = Image(filename=self.__filein)
-        if not im.mimetype.startswith("image"):
-            raise ValueError(
-                f"El fichero {self.__filein} no parece una imágen.")
+        try:
+            _ = Image(filename=self.__filein)
+        except Exception as e:
+            raise RuntimeError(
+                f"O {self.__filein} no es una imágen o está corrupta.") from e
 
         if self.__fileout.is_file():
             raise FileExistsError(f"El fichero {self.__fileout} ya existe.")
@@ -61,6 +62,10 @@ class ResizeImage:
         if self.__fileout.is_dir():
             raise ValueError(
                 "El argumento 'fileout' debe ser un fichero no un directorio.")
+
+        if not all(x > 0 for x in self.args.values()):
+            raise ValueError(
+                "'width' y 'height' tienen que ser enteros positivos.")
 
         return True
 
