@@ -23,11 +23,11 @@
 # SOFTWARE.
 
 
-from _constants import (
-    CONFIG_DEFAULT,
-    CONFIG_DIR_IN,
-    CONFIG_DIR_OUT,
-    CONFIG_HEADER,)
+# from _constants import (
+#     CONFIG_DEFAULT,
+#     CONFIG_DIR_IN,
+#     CONFIG_DIR_OUT,
+#     CONFIG_HEADER,)
 import os
 from pathlib import Path
 import toml
@@ -40,6 +40,12 @@ from typing import (
 
 class Configurator:
     """Una clase para generar y verificar la configuración."""
+
+    HEADER = "directorios"
+    IN = "in"
+    OUT = "out"
+    USER_DIR_KEYS = set(["in", "out", "actions", "filter"])
+    DEFAULT = {HEADER: {}}
 
     def __init__(self, path: Path, config: str) -> None:
         """Constructor.
@@ -86,12 +92,12 @@ class Configurator:
             os.makedirs(self.__directory)
         # Fichero de configuración: si no existe, se crea.
         if not self.__config_file.exists():
-            self.save(CONFIG_DEFAULT)
+            self.save(self.DEFAULT)
         # la variable interna que almacena la configuración; Read Only.
         self.__config = self.read()
         # Los directorios del usuario: si no existen, se crean.
-        user_dirs = [CONFIG_DIR_IN, CONFIG_DIR_OUT]
-        for item in self.__config[CONFIG_HEADER].values():
+        user_dirs = (self.IN, self.OUT)
+        for item in self.__config[self.HEADER].values():
             if all(d in item for d in user_dirs):
                 for d in user_dirs:
                     path = Path(item[d])

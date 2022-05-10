@@ -23,10 +23,6 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-from _constants import (
-    CONFIG_HEADER,
-    CONFIG_DIR_IN,
-    CONFIG_DIR_OUT,)
 from pathlib import Path
 from xdg import xdg_config_home
 from configurator import Configurator
@@ -41,11 +37,14 @@ def main(app, config):
     path = Path(xdg_config_home()) / app
     conf = Configurator(path, config).read()
 
-    for item in conf[CONFIG_HEADER].values():
+    for item in conf[Configurator.HEADER].values():
+
+        if not set(item.keys()) == Configurator.USER_DIR_KEYS:
+            continue
 
         # Leer el path a los dos directorios y la acción.
-        dir_in = Path(item[CONFIG_DIR_IN])
-        dir_out = Path(item[CONFIG_DIR_OUT])
+        dir_in = Path(item[Configurator.IN])
+        dir_out = Path(item[Configurator.OUT])
 
         # Ver el contenido de los directorios ANTES de la acción.
         print(

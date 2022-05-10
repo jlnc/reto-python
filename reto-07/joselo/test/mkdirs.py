@@ -29,16 +29,59 @@ import shutil
 import sys
 
 sys.path.append(os.path.join("../src"))  # noqa
-from _constants import (
-    CONFIG,
-    CONFIG_APP,
-    CONFIG_DIR_IN,
-    CONFIG_DIR_OUT,
-    CONFIG_FILE,
-    CONFIG_HEADER,
-    FILES,
-    TEST_ROOT,)
+# from _constants import (
+#     CONFIG,
+#     CONFIG_DIR_IN,
+#     CONFIG_DIR_OUT,
+#     CONFIG_HEADER,)
 from configurator import Configurator
+
+
+APP_NAME = 'diogenes'
+CONFIG_APP = Path("~/.config/diogenes").expanduser()
+CONFIG_FILE = "diogenes.conf"
+
+
+def test_root():
+    """Asegura que el directorio de pruebas cuelgue del directorio correcto."""
+    # cwd_ = Path().absolute().name
+    cwd_ = os.path.basename(os.getcwd())
+    if cwd_ == 'test':
+        return Path('.') / APP_NAME
+    if cwd_ == 'src':
+        return Path('../test') / APP_NAME
+    raise RuntimeError("")
+
+
+TEST_ROOT = test_root()
+FILES = ["image.jpg", "image.svg", "image.png", "text.txt"]
+
+CONFIG = {Configurator.HEADER: {
+    "1": {
+        Configurator.IN: str(TEST_ROOT / "ImágenesIn1"),
+        Configurator.OUT: str(TEST_ROOT / "ImágenesOut1"),
+        "actions": ["copy", "move"],
+        "filter": "*.png"},
+    "2": {
+        Configurator.IN: str(TEST_ROOT / "ImágenesIn2"),
+        Configurator.OUT: str(TEST_ROOT / "ImágenesOut2"),
+        "actions": ["move"],
+        "filter": "*.svg"},
+    "3": {
+        Configurator.IN: str(TEST_ROOT / "ImágenesIn3"),
+        Configurator.OUT: str(TEST_ROOT / "ImágenesOut3"),
+        "actions": ["copy", "none"],
+        "filter": "*.txt"},
+    "4": {
+        Configurator.IN: str(TEST_ROOT / "ImágenesIn4"),
+        Configurator.OUT: str(TEST_ROOT / "ImágenesOut4"),
+        "actions": [],
+        "filter": "*"},
+    "5": {
+        Configurator.IN: str(TEST_ROOT / "ImágenesIn5"),
+        Configurator.OUT: str(TEST_ROOT / "ImágenesOut5"),
+        "actions": ["move"],
+        "filter": ""}}}
 
 
 def mkdirs():  # noqa
@@ -48,11 +91,11 @@ def mkdirs():  # noqa
     configurator.save(CONFIG)
     config = configurator.read()
     shutil.copy(TEST_ROOT / CONFIG_FILE, CONFIG_APP)
-    for item in config[CONFIG_HEADER].values():
-        for dir_ in (CONFIG_DIR_IN, CONFIG_DIR_OUT):
+    for item in config[config.HEADER].values():
+        for dir_ in (config.IN, config.OUT):
             path = Path(item[dir_])
             os.makedirs(path)
-            if dir_ == CONFIG_DIR_IN:
+            if dir_ == config.IN:
                 for f in FILES:
                     file = path / f
                     file.touch()

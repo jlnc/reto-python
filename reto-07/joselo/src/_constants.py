@@ -23,18 +23,22 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
+import os
 from pathlib import Path
 
 # APP = "diogenes"
 # config = f"{APP}.conf"
 
+
+APP_NAME = 'diogenes'
 CONFIG_APP = Path("~/.config/diogenes").expanduser()
-TEST_ROOT = Path('./diogenes').absolute()
-CONFIG_FILE = "diogenes.conf"
 
 CONFIG_HEADER = "directorios"
 CONFIG_DIR_IN = "in"
 CONFIG_DIR_OUT = "out"
+USER_DIR_KEYS = set("in", "out", "actions", "filter")
+
+
 CONFIG_DEFAULT = {CONFIG_HEADER: {}}
 CONFIG = {CONFIG_HEADER: {
     "1": {
@@ -62,5 +66,3 @@ CONFIG = {CONFIG_HEADER: {
         CONFIG_DIR_OUT: str(TEST_ROOT / "ImágenesOut5"),
         "actions": ["move"],
         "filter": ""}}}
-
-FILES = ["image.jpg", "image.svg", "image.png", "text.txt"]
