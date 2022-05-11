@@ -42,7 +42,7 @@ class ResizeImage:
 
     filein: Path
     fileout: Path
-    args: Union[dict, tuple[int, int], int]  # = field(init=False)
+    args: Union[dict[str, int], tuple[int, int], int]  # = field(init=False)
     width: int = field(init=False)
     height: int = field(init=False)
 
