@@ -39,7 +39,7 @@ def main(app, config):
 
     for item in conf[Configurator.HEADER].values():
 
-        if not set(item.keys()) == Configurator.USER_DIR_KEYS:
+        if not set(item.keys()) <= Configurator.USER_DIR_KEYS:
             continue
 
         # Leer el path a los dos directorios y la acción.
