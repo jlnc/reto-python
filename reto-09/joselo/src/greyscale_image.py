@@ -24,6 +24,7 @@
 # SOFTWARE.
 
 from pathlib import Path
+from typing import Any
 from wand.exceptions import WandException
 from wand.image import Image
 
@@ -31,7 +32,8 @@ from wand.image import Image
 class GreyscaleImage:
     """GreyscaleImage."""
 
-    def __init__(self, filein: Path, fileout: Path) -> None:
+    def __init__(self, filein: Path, fileout: Path,
+                 args: Any = None, /) -> None:
         self.__filein = Path(filein)
         self.__fileout = Path(fileout)
 
