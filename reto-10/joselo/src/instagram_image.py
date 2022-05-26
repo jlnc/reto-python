@@ -98,8 +98,10 @@ def main():  # noqa
 
 
 def test():  # noqa
+    # filein = Path("/home/lorenzo/kk/bb.jpg")
     filein = Path("../test/jupiter.jpg")
     for filter_name in InstagramImage.filtros():
+        # fileout = Path(f"/home/lorenzo/kk/bb_{filter_name}.jpg")
         fileout = Path(f"../test/jupiter_{filter_name}.jpg")
         action = InstagramImage(filein, fileout, {'filter': filter_name})
         if action.check():

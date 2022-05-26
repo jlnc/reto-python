@@ -3,13 +3,9 @@
 
 ### Conjuntos inmutables (frozenset)
 
-El tipo `set` es mutable; se puede añadir y eliminar elementos a un conjunto y eso no es lo que define a un conjunto desde el punto de vista matemático, que se caracteriza justo por lo contrario: cuando dos conjuntos tienen elementos diferentes, entonces son conjuntos diferentes.
+El tipo `set` es mutable; se puede añadir y eliminar elementos a un conjunto y eso no es lo que define a un conjunto desde el punto de vista matemático, que se caracteriza justo por lo contrario: cuando dos conjuntos tienen elementos diferentes, entonces son conjuntos diferentes. Un objeto de tipo `set` no es _hashable_ y por lo tanto no puede ser una _key_ de un diccionario.
 
-Un objeto de tipo `set` no es _hashable_ y por lo tanto no puede ser una _key_ de un diccionario.
-
-En Python el tipo que más se parece a un conjunto tal y como lo conocemos en las matemáticas y que además es _hashable_, es el `frozenset` que es inmutable y es _hashable_ siempre que sus elementos sean también _hashables_ al igual que ocurre con el tipo `tuple`.
-
-La principal diferencia entre el tipo `frozenset` y el tipo `tuple` es la facilidad con la que se pueden resolver ciertos problemas que con las tuplas son más complejos.
+En Python el tipo que más se parece a un conjunto tal y como lo conocemos en las matemáticas y que además es _hashable_, es el `frozenset` que es inmutable y es _hashable_ siempre que sus elementos sean también _hashables_ al igual que ocurre con el tipo `tuple`. La principal diferencia entre el tipo `frozenset` y el tipo `tuple` es la facilidad con la que se pueden resolver ciertos problemas usando los conjuntos que con las tuplas son más complejos.
 
 Un ejemplo de esto es la clase `InstagramImage` implementada de la siguiente manera.
 
