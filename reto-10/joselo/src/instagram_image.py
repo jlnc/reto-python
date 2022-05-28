@@ -25,16 +25,19 @@
 
 from functools import reduce
 from pathlib import Path
+from typing import Optional
 from PIL import Image
 import pilgram
 import pilgram.css
-from typing import Optional
 
 
 class InstagramImage:
     """InstagramImage."""
 
-    _FILTROS = {
+    # Un diccionario cuyas claves son conjuntos con los nombres de
+    # los filtros de un módulo dado y cuyos valores son el módulo que
+    # proporciona dichos filtros.
+    _FILTROS: dict[frozenset[str], str] = {
         frozenset(
             ["_1977", "aden", "brannan", "brooklyn", "clarendon", "earlybird",
              "gingham", "hudson", "inkwell", "kelvin", "lark", "lofi",
@@ -52,27 +55,31 @@ class InstagramImage:
 
         self.__filein = Path(filein)
         self.__fileout = Path(fileout)
+        self.__filter = None
 
         try:
             filtro = args['filter']
         except KeyError:
-            raise
+            filtro = None
 
-        if filtro not in self.filtros():
-            raise ValueError(f"{filtro} no está en las listas de filtros.")
+        if filtro in self.filtros():
+            for item in InstagramImage._FILTROS:
+                if filtro in item:
+                    modulo = InstagramImage._FILTROS[item]
+                    break
+            self.__filter = f"{modulo}.{filtro}"
 
-        FILTROS = InstagramImage._FILTROS
-        modulo = [FILTROS[x] for x in FILTROS if filtro in x][0]
-
-        self.__filter = f"{modulo}.{filtro}"
-
+    # Por conveniencia, para que la función test pueda ejecutar todos los
+    # filtros, uno detrás de otro.
     @classmethod
-    def filtros(cls):  # noqa
+    def filtros(cls):
+        """La unión de todos los subconjuntos de filtros."""
         return reduce(set.union, cls._FILTROS, set())
 
     def check(self) -> bool:
         """check."""
-        return self.__filein.is_file() \
+        return self.__filter is not None \
+            and self.__filein.is_file() \
             and not self.__filein.is_symlink() \
             and not self.__fileout.exists()
 
@@ -88,21 +95,17 @@ class InstagramImage:
 
 def main():  # noqa
     filter_name = "lofi"
-    # filein = Path("/home/lorenzo/kk/bb.jpg")
-    # fileout = Path(f"/home/lorenzo/kk/bb_{filter_name}.jpg")
-    filein = Path("../test/jupiter.jpg")
-    fileout = Path(f"../test/jupiter_{filter_name}.jpg")
+    filein = Path("/home/lorenzo/kk/bb.jpg")
+    fileout = Path(f"/home/lorenzo/kk/bb_{filter_name}.jpg")
     action = InstagramImage(filein, fileout, {'filter': filter_name})
     if action.check():
         action.execute()
 
 
 def test():  # noqa
-    # filein = Path("/home/lorenzo/kk/bb.jpg")
-    filein = Path("../test/jupiter.jpg")
+    filein = Path("/home/lorenzo/kk/bb.jpg")
     for filter_name in InstagramImage.filtros():
-        # fileout = Path(f"/home/lorenzo/kk/bb_{filter_name}.jpg")
-        fileout = Path(f"../test/jupiter_{filter_name}.jpg")
+        fileout = Path(f"/home/lorenzo/kk/bb_{filter_name}.jpg")
         action = InstagramImage(filein, fileout, {'filter': filter_name})
         if action.check():
             action.execute()
