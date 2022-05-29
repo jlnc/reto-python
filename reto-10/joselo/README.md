@@ -64,7 +64,7 @@ En este caso concreto no es una gran ventaja salvo por el método de clase que p
 
 La forma segura de usar `eval` en Python es usando el módulo `ast` con la función `ast.literal_eval` aunque no se puede usar de la misma manera que `eval`. Ver [The pitfall of eval function and its safe alternative in Python.](https://eulertech.wordpress.com/2018/06/10/the-pitfall-of-eval-function-and-its-safe-alternative-in-python/)
 
-El código de `InstagramImage.execute` queda de la siguiente manera:
+El código de `InstagramImage.execute` podría ser de la siguiente manera:
 
 ```python
     def execute(self) -> None:
@@ -79,12 +79,6 @@ El código de `InstagramImage.execute` queda de la siguiente manera:
             pass
 ```
 
-Curiosamente
-
-```python
-            image = ast.literal_eval(f"{self.__filter}(image)")
-```
-
-no funciona.
+pero no funciona. ¿Por qué?
 
 ----
