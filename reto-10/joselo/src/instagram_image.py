@@ -67,7 +67,7 @@ class InstagramImage:
                 if filtro in item:
                     modulo = InstagramImage._FILTROS[item]
                     break
-            self.__filter = f"{modulo}.{filtro}"
+            self.__filter = eval(f"{modulo}.{filtro}")
 
     # Por conveniencia para que la función test pueda ejecutar todos los
     # filtros, uno detrás de otro.
@@ -81,15 +81,14 @@ class InstagramImage:
         return self.__filter is not None \
             and self.__filein.is_file() \
             and not self.__filein.is_symlink() \
+            and self.__fileout.parent.is_dir() \
             and not self.__fileout.exists()
 
     def execute(self) -> None:
         """execute."""
-        import ast
         try:
             image = Image.open(self.__filein)
-            func_call = f"{self.__filter}(image)"
-            image = ast.literal_eval(func_call)
+            image = self.__filter(image)
             image.save(self.__fileout)
         except Exception:
             pass
@@ -105,9 +104,11 @@ def main():  # noqa
 
 
 def test():  # noqa
-    filein = Path("/home/lorenzo/kk/bb.jpg")
+    # filein = Path("/home/lorenzo/kk/bb.jpg")
+    filein = Path("../test/jupiter.jpg")
     for filter_name in InstagramImage.filtros():
-        fileout = Path(f"/home/lorenzo/kk/bb_{filter_name}.jpg")
+        # fileout = Path(f"/home/lorenzo/kk/bb_{filter_name}.jpg")
+        fileout = Path(f"../test/jupiter_{filter_name}.jpg")
         action = InstagramImage(filein, fileout, {'filter': filter_name})
         if action.check():
             action.execute()
