@@ -69,7 +69,7 @@ class InstagramImage:
                     break
             self.__filter = f"{modulo}.{filtro}"
 
-    # Por conveniencia, para que la función test pueda ejecutar todos los
+    # Por conveniencia para que la función test pueda ejecutar todos los
     # filtros, uno detrás de otro.
     @classmethod
     def filtros(cls):
@@ -85,9 +85,11 @@ class InstagramImage:
 
     def execute(self) -> None:
         """execute."""
+        import ast
         try:
             image = Image.open(self.__filein)
-            image = eval(f"{self.__filter}(image)")
+            func_call = f"{self.__filter}(image)"
+            image = ast.literal_eval(func_call)
             image.save(self.__fileout)
         except Exception:
             pass
