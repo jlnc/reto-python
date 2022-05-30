@@ -38,16 +38,8 @@ class InstagramImage:
     # los filtros de un módulo dado y cuyos valores son el módulo que
     # proporciona dichos filtros.
     _FILTROS: dict[frozenset[str], str] = {
-        frozenset(
-            ["_1977", "aden", "brannan", "brooklyn", "clarendon", "earlybird",
-             "gingham", "hudson", "inkwell", "kelvin", "lark", "lofi",
-             "maven", "mayfair", "moon", "nashville", "perpetua", "reyes",
-             "rise", "slumber", "stinson", "toaster", "valencia", "walden",
-             "willow", "xpro2"]
-            ): "pilgram",
-        frozenset(
-            ["contrast", "grayscale", "hue_rotate", "saturate", "sepia"]
-            ): "pilgram.css",
+        frozenset(pilgram.__all__[1:]): "pilgram",
+        frozenset(pilgram.css.__all__): "pilgram.css",
         }
 
     def __init__(self, filein: Path, fileout: Path,
@@ -56,16 +48,10 @@ class InstagramImage:
         self.__filein = Path(filein)
         self.__fileout = Path(fileout)
         self.__filter = None
-
-        try:
-            filtro = args['filter']
-        except KeyError:
-            filtro = None
-
+        filtro = args['filter'] if 'filter' in args else None
         if filtro in self.filtros():
-            for item in InstagramImage._FILTROS:
-                if filtro in item:
-                    modulo = InstagramImage._FILTROS[item]
+            for fset, modulo in InstagramImage._FILTROS.items():
+                if filtro in fset:
                     break
             self.__filter = eval(f"{modulo}.{filtro}")
 
@@ -73,7 +59,7 @@ class InstagramImage:
     # filtros, uno detrás de otro.
     @classmethod
     def filtros(cls):
-        """La unión de todos los subconjuntos de filtros."""
+        """Acceso a InstagramImage._FILTROS desde objetos externos."""
         return reduce(set.union, cls._FILTROS, set())
 
     def check(self) -> bool:
@@ -111,6 +97,7 @@ def test():  # noqa
         fileout = Path(f"../test/jupiter_{filter_name}.jpg")
         action = InstagramImage(filein, fileout, {'filter': filter_name})
         if action.check():
+            print(filter_name)
             action.execute()
 
 
